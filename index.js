@@ -1,0 +1,84 @@
+/* global dataLayer */
+export function GTMPush(eventLabel) {
+    if (dataLayer) {
+        dataLayer.push({ 'event': 'Interactive Click', 'eventData': eventLabel });
+    }
+}
+export function publishWindowResize(S) { // need to pass in the StateModule
+    window.addEventListener("resize", resizeThrottler, false);
+
+    var resizeTimeout;
+
+    function resizeThrottler() { // adapted from https://developer.mozilla.org/en-US/docs/Web/Events/resize#setTimeout
+        // ignore resize events as long as an actualResizeHandler execution is in the queue
+        if (!resizeTimeout) {
+            resizeTimeout = setTimeout(function() {
+                actualResizeHandler();
+                resizeTimeout = null;
+            }, 350);
+        }
+    }
+
+    function actualResizeHandler() {
+        
+        S.setState('resize', document.documentElement.clientWidth);
+    }
+}
+
+export const StringHelpers = (function(){
+    String.prototype.cleanString = function() { // lowercase and remove punctuation and replace spaces with hyphens; delete punctuation
+        return this.replace(/[ /]/g,'-').replace(/['"”’“‘,.!?;()&]/g,'').toLowerCase();
+    };
+
+    String.prototype.removeUnderscores = function() { 
+        return this.replace(/_/g,' ');
+    };
+
+    String.prototype.undoCamelCase = function() {
+        return this.replace(/([A-Z])/g, ' $1').toLowerCase();
+    };
+
+    String.prototype.trunc = String.prototype.trunc || // ht https://stackoverflow.com/a/1199420
+         function( n, useWordBoundary ){
+             if (this.length <= n) { return this; }
+             var subString = this.substr(0, n-1);
+             return (useWordBoundary 
+                ? subString.substr(0, subString.lastIndexOf(' ')) 
+                : subString) + "...";
+          };
+
+    String.prototype.hashCode = function() {
+      var hash = 0, i, chr;
+      if (this.length === 0) return hash;
+      for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+    };
+})()
+
+export const DOMHelpers = {
+ c:  (s) => {
+     
+     if ( s.indexOf('.') !== -1 || s.indexOf('#') !== -1 ){
+         let classStrings = s.match(/\.([^#.]*)/g) || [];
+         let idString = s.match(/#([^.]*)/);
+         let elString = s.match(/^([^.#]+)/);
+         
+         
+         let el = document.createElement(elString[0]);
+         classStrings.forEach(klass => {
+            el.classList.add(klass.replace('.',''));
+         });
+         if ( idString !== null ){
+            el.setAttribute('id', idString[1]);
+         }
+         return el;
+     }
+     return document.createElement(s);
+ },
+ q:  (s) => document.querySelector(s),
+ qa: (s) => document.querySelectorAll(s)
+}
