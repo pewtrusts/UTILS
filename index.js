@@ -24,7 +24,24 @@ export function publishWindowResize(S) { // need to pass in the StateModule
         S.setState('resize', document.documentElement.clientWidth);
     }
 }
-
+export const FadeInText = (function(){
+    HTMLElement.prototype.fadeOutContent = function(){
+         this.classList.add('no-opacity');
+    };
+    HTMLElement.prototype.fadeInContent = function(content){
+        console.log(this);
+        return new Promise((resolve) => {
+            var durationStr = window.getComputedStyle(this).getPropertyValue('transition-duration') || 0,
+                duration = parseFloat(durationStr) * 1000;
+            this.fadeOutContent();
+            setTimeout(() => {
+                this.innerHTML = content;
+                this.classList.remove('no-opacity');
+                resolve(true);
+            }, duration);
+        });
+    };
+})();
 export const StringHelpers = (function(){
     String.prototype.cleanString = function() { // lowercase and remove punctuation and replace spaces with hyphens; delete punctuation
         return this.replace(/[ /]/g,'-').replace(/['"”’“‘,.!?;()&:]/g,'').toLowerCase();
