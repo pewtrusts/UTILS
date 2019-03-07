@@ -28,10 +28,13 @@ export const FadeInText = (function(){
     HTMLElement.prototype.fadeOutContent = function(){
          this.classList.add('no-opacity');
     };
-    HTMLElement.prototype.fadeInContent = function(content){
-        console.log(this);
+    HTMLElement.prototype.fadeInContent = function(content, s){
+        var durationS = s || 0;
+        if ( s ){
+            this.style.transition = 'opacity ' + s + 's ease-in-out';
+        }
         return new Promise((resolve) => {
-            var durationStr = window.getComputedStyle(this).getPropertyValue('transition-duration') || 0,
+            var durationStr = window.getComputedStyle(this).getPropertyValue('transition-duration') || durationS,
                 duration = parseFloat(durationStr) * 1000;
             this.fadeOutContent();
             setTimeout(() => {
