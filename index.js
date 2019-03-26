@@ -21,7 +21,7 @@ export function publishWindowResize(S) { // need to pass in the StateModule
 
     function actualResizeHandler() {
         
-        S.setState('resize', document.documentElement.clientWidth);
+        S.setState('resize', [document.documentElement.clientWidth, document.documentElement.clientHeight]);
     }
 }
 export const FadeInText = (function(){
