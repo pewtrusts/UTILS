@@ -4,7 +4,7 @@ export function GTMPush(eventLabel) {
         dataLayer.push({ 'event': 'Interactive Click', 'eventData': eventLabel });
     }
 }
-export function publishWindowResize(S) { // need to pass in the StateModule
+export function publishWindowResize(S, delay = 350) { // need to pass in the StateModule
     window.addEventListener("resize", resizeThrottler, false);
 
     var resizeTimeout;
@@ -15,7 +15,7 @@ export function publishWindowResize(S) { // need to pass in the StateModule
             resizeTimeout = setTimeout(function() {
                 actualResizeHandler();
                 resizeTimeout = null;
-            }, 350);
+            }, delay);
         }
     }
 
