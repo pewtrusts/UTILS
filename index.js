@@ -108,3 +108,29 @@ export const DOMHelpers = {
     q: (s) => document.querySelector(s),
     qa: (s) => document.querySelectorAll(s)
 }
+
+export function disableHoverOnTouch(){
+/* adds and removes `_isTouchMode` bool property to document.body based on touch and mouse events
+ accounts for devices with both touch and mouse. touching sets _isTouchMode to true; using the mouse sets
+ it to false. app can query this property elsewhere */
+// HT: https://stackoverflow.com/a/30303898
+    var container = document.body;
+    var lastTouchTime = 0;
+    function enableHover() {
+        if (new Date() - lastTouchTime < 500) return;
+        if (!container._isTouchMode) return;
+        container._isTouchMode = false;
+        console.log(container._isTouchMode);
+    }
+    function disableHover() {
+        if (container._isTouchMode) return;
+        container._isTouchMode = true;
+        console.log(container._isTouchMode);
+    }
+    function updateLastTouchTime() {
+        lastTouchTime = new Date();
+    }
+    document.addEventListener('touchstart', updateLastTouchTime, true);
+    document.addEventListener('touchstart', disableHover, true);
+    document.addEventListener('mousemove', enableHover, true);
+}
