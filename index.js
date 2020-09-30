@@ -115,10 +115,11 @@ export function disableHoverOnTouch(){
  it to false. app can query this property elsewhere */
 // HT: https://stackoverflow.com/a/30303898
     var container = document.body;
+    container._isTouchMode = false;
     var lastTouchTime = 0;
     function enableHover() {
         if (new Date() - lastTouchTime < 500) return;
-        if (!container._isTouchMode) return;
+        if (container._isTouchMode == false) return;
         container._isTouchMode = false;
         console.log(container._isTouchMode);
     }
